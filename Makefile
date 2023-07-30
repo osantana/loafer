@@ -15,6 +15,9 @@ clean-dist:
 
 clean: clean-pyc clean-dist
 
+format:
+	poetry run pre-commit run -a
+
 test:
 	poetry run pytest -vv tests
 
