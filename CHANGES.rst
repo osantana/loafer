@@ -1,8 +1,10 @@
-2.1.0 (2023-07-29)
+3.0.0 (2023-07-29)
 ------------------
 
 * Update project to use modern tools
 * Deprecate docker, CircleCI, setup.py, etc.
+* Apply pyupgrade to upgrade some Python constructions
+* Change logging messages to use ``extra=`` argument instead of f-strings
 * Merge changes from olist/olist-loafer
 * Merge changes from silviolleite/loafer
 
