@@ -10,7 +10,7 @@ from loafer.routes import Route
 from loafer.runners import LoaferRunner
 
 
-@pytest.fixture
+@pytest.fixture()
 def dummy_route(dummy_provider):
     return Route(dummy_provider, handler=mock.Mock())
 
@@ -18,13 +18,13 @@ def dummy_route(dummy_provider):
 def test_dispatcher_invalid_routes():
     manager = LoaferManager(routes=[])
     with pytest.raises(ConfigurationError):
-        manager.dispatcher
+        assert manager.dispatcher
 
 
 def test_dispatcher_invalid_route_instance():
     manager = LoaferManager(routes=[mock.Mock()])
     with pytest.raises(ConfigurationError):
-        manager.dispatcher
+        assert manager.dispatcher
 
 
 def test_dispatcher(dummy_route):

@@ -5,13 +5,13 @@ import pytest
 # boto client methods mock
 
 
-@pytest.fixture
+@pytest.fixture()
 def queue_url():
     queue_url = "https://sqs.us-east-1.amazonaws.com/123456789012/queue-name"
     return {"QueueUrl": queue_url}
 
 
-@pytest.fixture
+@pytest.fixture()
 def sqs_message():
     message = {"Body": "test"}
     return {"Messages": [message]}
@@ -25,12 +25,12 @@ def sqs_send_message():
     }
 
 
-@pytest.fixture
+@pytest.fixture()
 def sns_list_topics():
     return {"Topics": [{"TopicArn": "arn:aws:sns:region:id:topic-name"}]}
 
 
-@pytest.fixture
+@pytest.fixture()
 def sns_publish():
     return {"ResponseMetadata": {"HTTPStatusCode": 200, "RequestId": "uuid"}, "MessageId": "uuid"}
 
@@ -39,7 +39,7 @@ def sns_publish():
 
 
 class ClientContextCreator:
-    def __init__(self, client):
+    def __init__(self, client) -> None:
         self._client = client
 
     async def __aenter__(self):
@@ -49,7 +49,7 @@ class ClientContextCreator:
         pass
 
 
-@pytest.fixture
+@pytest.fixture()
 def boto_client_sqs(queue_url, sqs_message):
     mock_client = mock.Mock()
     mock_client.get_queue_url = mock.AsyncMock(return_value=queue_url)
@@ -61,22 +61,22 @@ def boto_client_sqs(queue_url, sqs_message):
     return mock_client
 
 
-@pytest.fixture
+@pytest.fixture()
 def mock_boto_session_sqs(boto_client_sqs):
     mock_session = mock.Mock()
     mock_session.create_client.return_value = ClientContextCreator(boto_client_sqs)
     return mock.patch("loafer.ext.aws.bases.get_session", return_value=mock_session)
 
 
-@pytest.fixture
-def boto_client_sns(sns_publish, sns_list_topics):
+@pytest.fixture()
+def boto_client_sns(sns_publish):
     mock_client = mock.Mock()
     mock_client.publish = mock.AsyncMock(return_value=sns_publish)
     mock_client.close = mock.AsyncMock()
     return mock_client
 
 
-@pytest.fixture
+@pytest.fixture()
 def mock_boto_session_sns(boto_client_sns):
     mock_session = mock.Mock()
     mock_session.create_client.return_value = ClientContextCreator(boto_client_sns)

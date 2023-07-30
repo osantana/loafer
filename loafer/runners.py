@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 class LoaferRunner:
-    def __init__(self, max_workers=None, on_stop_callback=None):
+    def __init__(self, max_workers=None, on_stop_callback=None) -> None:
         self._on_stop_callback = on_stop_callback
 
         # XXX: See https://github.com/python/asyncio/issues/258
@@ -33,10 +33,15 @@ class LoaferRunner:
         finally:
             self.stop()
             self.loop.close()
-            logger.debug(f"loop.is_running={self.loop.is_running()}")
-            logger.debug(f"loop.is_closed={self.loop.is_closed()}")
+            logger.debug(
+                "Looping",
+                extra={
+                    "is_running": self.loop.is_running(),
+                    "is_closed": self.loop.is_closed(),
+                },
+            )
 
-    def prepare_stop(self, *args):
+    def prepare_stop(self, *args):  # noqa: ARG002
         if self.loop.is_running():
             # signals loop.run_forever to exit in the next iteration
             self.loop.stop()
@@ -58,10 +63,10 @@ class LoaferRunner:
                         "message": "unhandled exception during asyncio.run() shutdown",
                         "exception": task.exception(),
                         "task": task,
-                    }
+                    },
                 )
 
-    def stop(self, *args, **kwargs):
+    def stop(self, *args, **kwargs):  # noqa: ARG002
         logger.info("stopping Loafer ...")
         if callable(self._on_stop_callback):
             self._on_stop_callback()

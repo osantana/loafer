@@ -13,7 +13,7 @@ async def echo_message_handler(message, *args):
     return True
 
 
-async def error_handler(exc_type, message):
+async def error_handler(exc_type, message):  # noqa: ARG001
     print(f"exception {exc_type} received")
     return False
 

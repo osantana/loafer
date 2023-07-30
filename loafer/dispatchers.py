@@ -8,29 +8,29 @@ logger = logging.getLogger(__name__)
 
 
 class LoaferDispatcher:
-    def __init__(self, routes, max_jobs=None):
+    def __init__(self, routes, max_jobs=None) -> None:
         self.routes = routes
         jobs = max_jobs or len(routes) * 10
         self._semaphore = asyncio.Semaphore(jobs)
 
     async def dispatch_message(self, message, route):
-        logger.debug(f"dispatching message to route={route}")
+        logger.debug("Dispatching message to route", extra={"route": route})
         confirm_message = False
         if not message:
-            logger.warning(f"message will be ignored:\n{message!r}\n")
+            logger.warning("Message will be ignored", extra={"dispatched_message": message})
             return confirm_message
 
         async with self._semaphore:
             try:
                 confirm_message = await route.deliver(message)
             except DeleteMessage:
-                logger.info(f"explicit message deletion\n{message}\n")
+                logger.info("Explicit message deletion", extra={"dispatched_message": message})
                 confirm_message = True
             except asyncio.CancelledError:
                 msg = '"{!r}" was cancelled, the message will not be acknowledged:\n{}\n'
                 logger.warning(msg.format(route.handler, message))
-            except Exception as exc:
-                logger.exception(f"{exc!r}")
+            except Exception:
+                logger.exception("error delivering message")
                 exc_info = sys.exc_info()
                 confirm_message = await route.error_handler(exc_info, message)
 

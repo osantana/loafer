@@ -8,7 +8,7 @@ from loafer.exceptions import ProviderError
 from loafer.ext.aws.providers import SQSProvider
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio()
 async def test_confirm_message(mock_boto_session_sqs, boto_client_sqs):
     with mock_boto_session_sqs:
         provider = SQSProvider("queue-name")
@@ -16,11 +16,12 @@ async def test_confirm_message(mock_boto_session_sqs, boto_client_sqs):
         await provider.confirm_message(message)
 
         assert boto_client_sqs.delete_message.call_args == mock.call(
-            QueueUrl=await provider.get_queue_url("queue-name"), ReceiptHandle="message-receipt-handle"
+            QueueUrl=await provider.get_queue_url("queue-name"),
+            ReceiptHandle="message-receipt-handle",
         )
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio()
 async def test_confirm_message_not_found(mock_boto_session_sqs, boto_client_sqs):
     error = ClientError(error_response={"ResponseMetadata": {"HTTPStatusCode": 404}}, operation_name="whatever")
     boto_client_sqs.delete_message.side_effect = error
@@ -35,7 +36,7 @@ async def test_confirm_message_not_found(mock_boto_session_sqs, boto_client_sqs)
         )
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio()
 async def test_confirm_message_unknown_error(mock_boto_session_sqs, boto_client_sqs):
     error = ClientError(error_response={"ResponseMetadata": {"HTTPStatusCode": 400}}, operation_name="whatever")
     boto_client_sqs.delete_message.side_effect = error
@@ -46,7 +47,7 @@ async def test_confirm_message_unknown_error(mock_boto_session_sqs, boto_client_
             await provider.confirm_message(message)
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio()
 async def test_fetch_messages(mock_boto_session_sqs, boto_client_sqs):
     options = {"WaitTimeSeconds": 5, "MaxNumberOfMessages": 10}
     with mock_boto_session_sqs:
@@ -63,7 +64,7 @@ async def test_fetch_messages(mock_boto_session_sqs, boto_client_sqs):
         )
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio()
 async def test_fetch_messages_returns_empty(mock_boto_session_sqs, boto_client_sqs):
     options = {"WaitTimeSeconds": 5, "MaxNumberOfMessages": 10}
     boto_client_sqs.receive_message.return_value = {"Messages": []}
@@ -80,7 +81,7 @@ async def test_fetch_messages_returns_empty(mock_boto_session_sqs, boto_client_s
         )
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio()
 async def test_fetch_messages_with_client_error(mock_boto_session_sqs, boto_client_sqs):
     with mock_boto_session_sqs:
         error = ClientError(error_response={"Error": {"Message": "unknown"}}, operation_name="whatever")
@@ -91,7 +92,7 @@ async def test_fetch_messages_with_client_error(mock_boto_session_sqs, boto_clie
             await provider.fetch_messages()
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio()
 async def test_fetch_messages_with_botocoreerror(mock_boto_session_sqs, boto_client_sqs):
     with mock_boto_session_sqs:
         error = BotoCoreError()
@@ -102,7 +103,7 @@ async def test_fetch_messages_with_botocoreerror(mock_boto_session_sqs, boto_cli
             await provider.fetch_messages()
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio()
 async def test_custom_visibility_timeout(mock_boto_session_sqs, boto_client_sqs):
     options = {"WaitTimeSeconds": 5, "MaxNumberOfMessages": 10, "VisibilityTimeout": 60}
     with mock_boto_session_sqs:
@@ -120,7 +121,7 @@ async def test_custom_visibility_timeout(mock_boto_session_sqs, boto_client_sqs)
         )
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio()
 async def test_backoff_factor_options(mock_boto_session_sqs, boto_client_sqs):
     options = {"WaitTimeSeconds": 5, "MaxNumberOfMessages": 10, "BackoffFactor": 1.5}
     with mock_boto_session_sqs:
@@ -137,9 +138,9 @@ async def test_backoff_factor_options(mock_boto_session_sqs, boto_client_sqs):
         assert "ApproximateReceiveCount" in receive_message_kwargs["AttributeNames"]
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio()
 @pytest.mark.parametrize(
-    "options, expected",
+    ("options", "expected"),
     [
         ({}, ["ApproximateReceiveCount"]),
         ({"AttributeNames": []}, ["ApproximateReceiveCount"]),
@@ -157,9 +158,9 @@ async def test_backoff_factor_options_with_attributes_names(mock_boto_session_sq
     assert len(receive_message_kwargs["AttributeNames"]) == len(expected)
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio()
 @pytest.mark.parametrize(
-    "visibility, backoff_multiplier, expected",
+    ("visibility", "backoff_multiplier", "expected"),
     [
         (30, 1.5, 45),
         (30, 1.75, 52),
@@ -167,7 +168,11 @@ async def test_backoff_factor_options_with_attributes_names(mock_boto_session_sq
     ],
 )
 async def test_fetch_messages_using_backoff_factor(
-    mock_boto_session_sqs, boto_client_sqs, visibility, backoff_multiplier, expected
+    mock_boto_session_sqs,
+    boto_client_sqs,
+    visibility,
+    backoff_multiplier,
+    expected,
 ):
     options = {
         "WaitTimeSeconds": 5,
@@ -181,7 +186,8 @@ async def test_fetch_messages_using_backoff_factor(
         message = {"ReceiptHandle": "message-receipt-handle", "Attributes": {"ApproximateReceiveCount": 2}}
 
         with mock.patch(
-            "loafer.ext.aws.providers.calculate_backoff_multiplier", return_value=backoff_multiplier
+            "loafer.ext.aws.providers.calculate_backoff_multiplier",
+            return_value=backoff_multiplier,
         ) as mock_calculate_backoff:
             await provider.message_not_processed(message)
 
@@ -194,9 +200,9 @@ async def test_fetch_messages_using_backoff_factor(
         )
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio()
 @pytest.mark.parametrize(
-    "error,expectation",
+    ("error", "expectation"),
     [
         (
             ClientError(error_response={"Error": {"Code": "InvalidParameterValue"}}, operation_name="whatever"),
@@ -210,7 +216,10 @@ async def test_fetch_messages_using_backoff_factor(
     ids=["InvalidParameterValue", "AnyOtherError"],
 )
 async def test_fetch_messages_change_message_visibility_error(
-    mock_boto_session_sqs, boto_client_sqs, error, expectation
+    mock_boto_session_sqs,
+    boto_client_sqs,
+    error,
+    expectation,
 ):
     boto_client_sqs.change_message_visibility.side_effect = error
     options = {

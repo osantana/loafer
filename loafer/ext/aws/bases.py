@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 class _BotoClient:
     boto_service_name = None
 
-    def __init__(self, **client_options):
+    def __init__(self, **client_options) -> None:
         self._client_options = {
             "api_version": client_options.get("api_version", None),
             "aws_access_key_id": client_options.get("aws_access_key_id", None),
@@ -28,12 +28,12 @@ class _BotoClient:
 class BaseSQSClient(_BotoClient):
     boto_service_name = "sqs"
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self._cached_queue_urls = {}
 
     async def get_queue_url(self, queue):
-        if queue and (queue.startswith("http://") or queue.startswith("https://")):
+        if queue and (queue.startswith(("http://", "https://"))):
             name = queue.split("/")[-1]
             self._cached_queue_urls[name] = queue
             queue = name

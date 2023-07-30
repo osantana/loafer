@@ -1,10 +1,11 @@
-from ...routes import Route
+from loafer.routes import Route
+
 from .message_translators import SNSMessageTranslator, SQSMessageTranslator
 from .providers import SQSProvider
 
 
 class SQSRoute(Route):
-    def __init__(self, provider_queue, provider_options=None, *args, **kwargs):
+    def __init__(self, provider_queue, provider_options=None, *args, **kwargs) -> None:
         provider_options = provider_options or {}
         provider = SQSProvider(provider_queue, **provider_options)
         kwargs["provider"] = provider
@@ -17,7 +18,7 @@ class SQSRoute(Route):
 
 
 class SNSQueueRoute(Route):
-    def __init__(self, provider_queue, provider_options=None, *args, **kwargs):
+    def __init__(self, provider_queue, provider_options=None, *args, **kwargs) -> None:
         provider_options = provider_options or {}
         provider = SQSProvider(provider_queue, **provider_options)
         kwargs["provider"] = provider

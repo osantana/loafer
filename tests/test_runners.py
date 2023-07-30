@@ -60,7 +60,7 @@ def test_runner_prepare_stop_already_stopped(get_loop_mock):
 
 
 @mock.patch("loafer.runners.asyncio.get_event_loop")
-def test_runner_stop_with_callback(loop_mock):
+def test_runner_stop_with_callback(loop_mock):  # noqa: ARG001
     callback = mock.Mock()
     runner = LoaferRunner(on_stop_callback=callback)
 

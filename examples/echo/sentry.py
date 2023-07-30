@@ -10,5 +10,5 @@ handler = sentry_handler(sentry_sdk)
 
 try:
     raise ValueError("test")
-except:  # noqa
+except:  # noqa: E722
     handler(sys.exc_info(), "ping-message")

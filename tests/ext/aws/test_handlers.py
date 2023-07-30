@@ -8,7 +8,7 @@ from loafer.ext.aws.handlers import SNSHandler, SQSHandler
 # SQSHandler
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio()
 @pytest.mark.parametrize("encoder", [json.dumps, str])
 async def test_sqs_handler_publish(mock_boto_session_sqs, boto_client_sqs, encoder):
     handler = SQSHandler("queue-name")
@@ -19,11 +19,12 @@ async def test_sqs_handler_publish(mock_boto_session_sqs, boto_client_sqs, encod
         assert mock_sqs.called
         assert boto_client_sqs.send_message.called
         assert boto_client_sqs.send_message.call_args == mock.call(
-            QueueUrl=await handler.get_queue_url("queue-name"), MessageBody=encoder("message")
+            QueueUrl=await handler.get_queue_url("queue-name"),
+            MessageBody=encoder("message"),
         )
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio()
 async def test_sqs_handler_publish_without_encoder(mock_boto_session_sqs, boto_client_sqs):
     handler = SQSHandler("queue-name")
     with mock_boto_session_sqs as mock_sqs:
@@ -33,18 +34,19 @@ async def test_sqs_handler_publish_without_encoder(mock_boto_session_sqs, boto_c
         assert mock_sqs.called
         assert boto_client_sqs.send_message.called
         assert boto_client_sqs.send_message.call_args == mock.call(
-            QueueUrl=await handler.get_queue_url("queue-name"), MessageBody="message"
+            QueueUrl=await handler.get_queue_url("queue-name"),
+            MessageBody="message",
         )
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio()
 async def test_sqs_handler_publish_without_queue_name():
     handler = SQSHandler()
     with pytest.raises(ValueError):
         await handler.publish("wrong")
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio()
 async def test_sqs_handler_hadle():
     handler = SQSHandler("foobar")
     handler.publish = mock.AsyncMock()
@@ -56,7 +58,7 @@ async def test_sqs_handler_hadle():
 # SNSHandler
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio()
 @pytest.mark.parametrize("encoder", [json.dumps, str])
 async def test_sns_handler_publisher(mock_boto_session_sns, boto_client_sns, encoder):
     handler = SNSHandler("arn:aws:sns:whatever:topic-name")
@@ -73,7 +75,7 @@ async def test_sns_handler_publisher(mock_boto_session_sns, boto_client_sns, enc
         )
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio()
 async def test_sns_handler_publisher_without_encoder(mock_boto_session_sns, boto_client_sns):
     handler = SNSHandler("arn:aws:sns:whatever:topic-name")
     with mock_boto_session_sns as mock_sns:
@@ -89,14 +91,14 @@ async def test_sns_handler_publisher_without_encoder(mock_boto_session_sns, boto
         )
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio()
 async def test_sns_handler_publish_without_topic():
     handler = SNSHandler()
     with pytest.raises(ValueError):
         await handler.publish("wrong")
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio()
 async def test_sns_handler_hadle():
     handler = SNSHandler("foobar")
     handler.publish = mock.AsyncMock()

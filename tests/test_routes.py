@@ -52,13 +52,13 @@ def test_apply_message_translator_error(dummy_provider):
     translator = StringMessageTranslator()
     translator.translate = mock.Mock(return_value={"content": "", "metadata": {}})
     route = Route(dummy_provider, mock.Mock(), message_translator=translator)
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError):  # noqa: PT012
         route.apply_message_translator("message")
         assert translator.translate.called
         translator.translate.assert_called_once_with("message")
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio()
 async def test_error_handler_unset(dummy_provider):
     route = Route(dummy_provider, mock.Mock())
     exc = TypeError()
@@ -72,7 +72,7 @@ def test_error_handler_invalid(dummy_provider):
         Route(dummy_provider, handler=mock.Mock(), error_handler="invalid")
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio()
 async def test_error_handler(dummy_provider):
     attrs = {}
 
@@ -92,7 +92,7 @@ async def test_error_handler(dummy_provider):
     assert attrs["message"] == "whatever"
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio()
 async def test_error_handler_coroutine(dummy_provider):
     error_handler = mock.AsyncMock(return_value=True)
     route = Route(dummy_provider, mock.Mock(), error_handler=error_handler)
@@ -104,28 +104,28 @@ async def test_error_handler_coroutine(dummy_provider):
     error_handler.assert_called_once_with(exc_info, "whatever")
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio()
 async def test_handler_class_based(dummy_provider):
-    class handler:
+    class Handler:
         async def handle(self, *args, **kwargs):
             pass
 
-    handler = handler()
+    handler = Handler()
     route = Route(dummy_provider, handler=handler)
     assert route.handler == handler.handle
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio()
 async def test_handler_class_based_invalid(dummy_provider):
-    class handler:
+    class Handler:
         pass
 
-    handler = handler()
+    handler = Handler()
     with pytest.raises(ValueError):
         Route(dummy_provider, handler=handler)
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio()
 async def test_handler_invalid(dummy_provider):
     with pytest.raises(ValueError):
         Route(dummy_provider, "invalid-handler")
@@ -140,12 +140,12 @@ def test_route_stop(dummy_provider):
 
 
 def test_route_stop_with_handler_stop(dummy_provider):
-    class handler:
+    class Handler:
         def handle(self, *args):
             pass
 
     dummy_provider.stop = mock.Mock()
-    handler = handler()
+    handler = Handler()
     handler.stop = mock.Mock()
     route = Route(dummy_provider, handler)
     route.stop()
@@ -157,7 +157,7 @@ def test_route_stop_with_handler_stop(dummy_provider):
 # FIXME: Improve all test_deliver* tests
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio()
 async def test_deliver(dummy_provider):
     attrs = {}
 
@@ -174,7 +174,7 @@ async def test_deliver(dummy_provider):
     assert message in attrs["args"]
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio()
 async def test_deliver_with_coroutine(dummy_provider):
     mock_handler = mock.AsyncMock(return_value=False)
     route = Route(dummy_provider, mock_handler)
@@ -185,7 +185,7 @@ async def test_deliver_with_coroutine(dummy_provider):
     assert message in mock_handler.call_args[0]
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio()
 async def test_deliver_with_message_translator(dummy_provider):
     mock_handler = mock.AsyncMock(return_value=True)
     route = Route(dummy_provider, mock_handler)

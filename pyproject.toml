@@ -9,7 +9,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.10"
 aiohttp = "^3.8.5"
-aiobotocore = {version = "^2.5.2", extras = ["boto3"]}
+aiobotocore = { version = "^2.5.2", extras = ["boto3"] }
 cached-property = "^1.5.2"
 
 [tool.poetry.group.dev.dependencies]
@@ -43,80 +43,71 @@ line-length = 120
 target-version = ["py310", "py311"]
 
 [tool.ruff]
-line-length = 100
+line-length = 120
 target-version = "py310"
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 select = [
-    # enabled (basic style and conventions)
     "E", # ruff-builtin - python codestyle (some rules disabled)
     "F", # pyflakes - check code for errors
     "W", # pycodestyle (warnings)
     "PLC", # pylint-convention
     "PLE", # pylint-error
     "PLW", # pylint-warning
-
-    # enabled with no (or low count of) errors
     "ISC", # flake8-implicit-str-concat - check for problematic implicit str concat
     "ASYNC", # flake8-async - A flake8 plugin that checks for bad async / asyncio practices.
     "YTT", # flake8-2020 - fix Python's version comparisons
     "T10", # flake8-debugger - check for debugger invocations
     "UP", # pyupgrade - update python code style to newer versions
-
-    # to-be enabled
-    # "A", # flake8-builtins - warn about built-in name shadowing
-    # "B", # flake8-bugbear - warn about common Python pitfalls
-    # "I", # isort - organize imports
-    # "N", # pep8-naming - force pep8 naming style
-    # "S", # flake8-bandit - detect potentially insecure code
-    # "ARG", # flake8-unused-arguments - check for unused arguments
-    # "BLE", # flake8-blind-except - forbid blind exception handling
-    # "C4", # flake8-comprehensions - optimize and adjust comprehensions
-    # "C90", # mccabe - complexity
-    # "COM", # flake8-commas - keep/force trailing commas
-    # "DTZ", # flake8-datetimez - check for missing `tz=` args in datetime
-    # "ERA", # eradicate - remove unused commented code
-    # "PIE", # flake8-pie - add extra style checks to flake8
-    # "PLR", # pylint-refactor
-    # "PT", # flake8-pytest-style - check for pytest test style
-    # "PTH", # flake8-use-pathlib - force use of Pathlib for paths (some rules disabled)
-    # "RET", # flake8-return - check for unnecessary code on function return
-    # "RSE", # flake8-raise - check for unnecessary parentesis on exception
-    # "SIM", # flake8-simplify - run simplifications on the code
-    # "SLF", # flake8-self - check for private members access
-    # "T20", # flake8-print - check for print()'s in the code
-    # "TID", # flake8-tidy-imports - improve import commands
-    # "TRY", # tryceratops - force good practices on exception handling
+    "I", # isort - organize imports
+    "N", # pep8-naming - force pep8 naming style
+    "S", # flake8-bandit - detect potentially insecure code
+    "ARG", # flake8-unused-arguments - check for unused arguments
+    "BLE", # flake8-blind-except - forbid blind exception handling
+    "C90", # mccabe - complexity
+    "COM", # flake8-commas - keep/force trailing commas
+    "DTZ", # flake8-datetimez - check for missing `tz=` args in datetime
+    "ERA", # eradicate - remove unused commented code
+    "PIE", # flake8-pie - add extra style checks to flake8
+    "PT", # flake8-pytest-style - check for pytest test style
+    "PTH", # flake8-use-pathlib - force use of Pathlib for paths (some rules disabled)
+    "RET", # flake8-return - check for unnecessary code on function return
+    "SIM", # flake8-simplify - run simplifications on the code
+    "SLF", # flake8-self - check for private members access
+    "T20", # flake8-print - check for print()'s in the code
+    "TID", # flake8-tidy-imports - improve import commands
+    "TRY", # tryceratops - force good practices on exception handling
+    "ICN", # flake8-import-conventions - check for problematic import aliases
+    "INP", # flake8-no-pep420 - check for packages without `__init__.py`
+    "INT", # flake8-gettext - check for issues with i18n strings
+    "A", # flake8-builtins - warn about built-in name shadowing
+    "B", # flake8-bugbear - warn about common Python pitfalls
+    "C4", # flake8-comprehensions - optimize and adjust comprehensions
+    "Q", # flake8-quotes - check for usage of quotes
+    "EXE", # flake8-executable - check for the right shebang in scripts
+    "PGH", # pygrep-hooks - detect some problematic patterns in code.
+    "RUF", # ruff - builtin ruff checks
+    "TCH", # flake8-type-checking - check usage of type-checked imports
+    "G", # flake8-logging-format - check for problems at log messages
 
     # disabled
-    # "C", # ???
-    # "D", # pydocstyle - force docstrings with pydoc format
-    # "G", # flake8-logging-format - check for problems at log messages
-    # "Q", # flake8-quotes - check for usage of quotes
-    # "T", # ???
-    # "ANN", # flake8-annotations - force type annotations
+    # "RSE", # flake8-raise - check for unnecessary parentesis on exception
     # "EM", # flake8-errmsg - force nice error messages in exceptions
-    # "EXE", # flake8-executable - check for the right shebang in scripts
-    # "FBT", # flake8-boolean-trap - prevent boolean argument trap
-    # "ICN", # flake8-import-conventions - check for problematic import aliases
-    # "INP", # flake8-no-pep420 - check for packages without `__init__.py`
-    # "INT", # flake8-gettext - check for issues with i18n strings
-    # "NPY", # numpy-specific-rules
-    # "PD", # pandas-vet - rules for pandas-vet
-    # "PGH", # pygrep-hooks - detect some problematic patterns in code.
+    # "PLR", # pylint-refactor
+    # "ANN", # flake8-annotations - force type annotations
     # "PYI", # flake8-pyi - check for type annotation stubs
-    # "RUF", # ruff - builtin ruff checks
-    # "TCH", # flake8-type-checking - check usage of type-checked imports
+    # "FBT", # flake8-boolean-trap - prevent boolean argument trap
 ]
 
 ignore = [
-    # to-be enabled
-    "E402", # Module level import not at top of file
-    "E722", # Do not use bare except
-    "F401", # {name} imported but unused
-    "F405", # {name} may be undefined, or defined from star imports
-    "PLW2901", # Outer {outer_kind} variable {name} overwritten by inner {inner_kind} target
-    "E501", # disable because we use Black https://beta.ruff.rs/docs/faq/#is-ruff-compatible-with-black
+    "TRY003", # too picky to not allowing long exception messages
+    "N818", # we don't want to use Error in all exception class names because we prefer Exception
 ]
 
 [tool.ruff.per-file-ignores]
-"server/test/**/*.py" = ["S101"]  # Use of assert detected
+"tests/**/*.py" = [
+    "S101", # Use of assert detected
+    "PT011", # Allow broad exceptions for tests
+    "SLF001", # FIXME: some tests access private methods
+]
+"examples/**/*.py" = ["T201"]  # ignore print in examples
+"docs/**/*.py" = ["INP001"]  # ignore missing __init__.py in doc dir

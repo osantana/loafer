@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 class LoaferManager:
-    def __init__(self, routes, runner=None, _concurrency_limit=None, _max_threads=None):
+    def __init__(self, routes, runner=None, _concurrency_limit=None, _max_threads=None) -> None:
         self._concurrency_limit = _concurrency_limit
         if runner is None:
             self.runner = LoaferRunner(on_stop_callback=self.on_loop__stop, max_workers=_max_threads)
@@ -54,10 +54,15 @@ class LoaferManager:
         exc = future.exception()
         # Unhandled errors crashes the event loop execution
         if isinstance(exc, BaseException):
-            logger.critical(f"fatal error caught: {exc!r}")
+            logger.critical(
+                "Fatal error caught",
+                extra={"exception": exc},
+            )
             self.runner.prepare_stop()
+            return None
+        return None
 
-    def on_loop__stop(self, *args, **kwargs):
+    def on_loop__stop(self, *args, **kwargs):  # noqa: ARG002
         logger.info("cancel dispatcher operations ...")
 
         if hasattr(self, "_future"):

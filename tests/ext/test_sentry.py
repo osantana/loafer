@@ -4,7 +4,7 @@ from loafer.ext.sentry import sentry_handler
 
 
 class MockScope:
-    def __init__(self):
+    def __init__(self) -> None:
         self.set_extra = mock.Mock()
 
     def __enter__(self):

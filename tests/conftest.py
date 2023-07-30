@@ -3,15 +3,15 @@ import pytest
 from loafer.providers import AbstractProvider
 
 
-@pytest.fixture
+@pytest.fixture()
 def dummy_handler():
-    def handler(message, *args):
+    def handler(message, *args):  # noqa: ARG001
         raise AssertionError("I should not be called")
 
     return handler
 
 
-@pytest.fixture
+@pytest.fixture()
 def dummy_provider():
     class Dummy(AbstractProvider):
         async def fetch_messages(self):

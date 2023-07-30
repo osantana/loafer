@@ -7,7 +7,7 @@ from loafer.ext.aws.message_translators import SNSMessageTranslator, SQSMessageT
 # sqs
 
 
-@pytest.fixture
+@pytest.fixture()
 def sqs_translator():
     return SQSMessageTranslator()
 
@@ -51,7 +51,7 @@ def test_translate_sqs_handles_json_error(sqs_translator):
 # sns
 
 
-@pytest.fixture
+@pytest.fixture()
 def sns_translator():
     return SNSMessageTranslator()
 

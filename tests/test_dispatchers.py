@@ -8,7 +8,7 @@ from loafer.exceptions import DeleteMessage
 from loafer.routes import Route
 
 
-@pytest.fixture
+@pytest.fixture()
 def provider():
     return mock.AsyncMock(
         fetch_messages=mock.AsyncMock(return_value=["message"]),
@@ -17,19 +17,18 @@ def provider():
     )
 
 
-@pytest.fixture
+@pytest.fixture()
 def route(provider):
     message_translator = mock.Mock(translate=mock.Mock(return_value={"content": "message"}))
-    route = mock.AsyncMock(
+    return mock.AsyncMock(
         provider=provider,
         handler=mock.Mock(),
         message_translator=message_translator,
         spec=Route,
     )
-    return route
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio()
 async def test_dispatch_message(route):
     route.deliver = mock.AsyncMock(return_value="confirmation")
     dispatcher = LoaferDispatcher([route])
@@ -42,7 +41,7 @@ async def test_dispatch_message(route):
     route.deliver.assert_called_once_with(message)
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio()
 @pytest.mark.parametrize("message", [None, ""])
 async def test_dispatch_invalid_message(route, message):
     route.deliver = mock.AsyncMock()
@@ -53,7 +52,7 @@ async def test_dispatch_invalid_message(route, message):
     assert route.deliver.called is False
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio()
 async def test_dispatch_message_task_delete_message(route):
     route.deliver = mock.AsyncMock(side_effect=DeleteMessage)
     dispatcher = LoaferDispatcher([route])
@@ -66,7 +65,7 @@ async def test_dispatch_message_task_delete_message(route):
     route.deliver.assert_called_once_with(message)
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio()
 async def test_dispatch_message_task_error(route):
     exc = Exception()
     route.deliver = mock.AsyncMock(side_effect=exc)
@@ -82,7 +81,7 @@ async def test_dispatch_message_task_error(route):
     assert route.error_handler.called is True
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio()
 async def test_dispatch_message_task_cancel(route):
     route.deliver = mock.AsyncMock(side_effect=asyncio.CancelledError)
     dispatcher = LoaferDispatcher([route])
@@ -95,7 +94,7 @@ async def test_dispatch_message_task_cancel(route):
     route.deliver.assert_called_once_with(message)
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio()
 async def test_message_processing(route):
     dispatcher = LoaferDispatcher([route])
     dispatcher.dispatch_message = mock.AsyncMock()
@@ -108,7 +107,7 @@ async def test_message_processing(route):
     route.provider.confirm_message.assert_called_once_with("message")
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio()
 async def test_message_processing_unsuccessfully(route):
     dispatcher = LoaferDispatcher([route])
     dispatcher.dispatch_message = mock.AsyncMock(return_value=False)
@@ -122,7 +121,7 @@ async def test_message_processing_unsuccessfully(route):
     route.provider.message_not_processed.assert_called_once_with("message")
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio()
 async def test_dispatch_provider(route):
     route.provider.fetch_messages = mock.AsyncMock(return_value=["message"])
     dispatcher = LoaferDispatcher([route])
@@ -133,8 +132,8 @@ async def test_dispatch_provider(route):
     assert route.provider.message_not_processed.called is False
 
 
-@pytest.mark.asyncio
-async def test_dispatch_without_tasks(route, event_loop):
+@pytest.mark.asyncio()
+async def test_dispatch_without_tasks(route):
     route.provider.fetch_messages = mock.AsyncMock(return_value=[])
     dispatcher = LoaferDispatcher([route])
     await dispatcher._dispatch_provider(route, forever=False)
@@ -144,8 +143,8 @@ async def test_dispatch_without_tasks(route, event_loop):
     assert route.provider.message_not_processed.called is False
 
 
-@pytest.mark.asyncio
-async def test_dispatch_providers(route, event_loop):
+@pytest.mark.asyncio()
+async def test_dispatch_providers(route):
     dispatcher = LoaferDispatcher([route])
     dispatcher._dispatch_provider = mock.AsyncMock()
     await dispatcher.dispatch_providers(forever=False)
@@ -153,8 +152,8 @@ async def test_dispatch_providers(route, event_loop):
     dispatcher._dispatch_provider.assert_called_once_with(route, False)
 
 
-@pytest.mark.asyncio
-async def test_dispatch_providers_with_error(route, event_loop):
+@pytest.mark.asyncio()
+async def test_dispatch_providers_with_error(route):
     route.provider.fetch_messages.side_effect = ValueError
     dispatcher = LoaferDispatcher([route])
     with pytest.raises(ValueError):

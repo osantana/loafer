@@ -17,14 +17,16 @@ class AbstractProvider(abc.ABC):
         This usually means we need to delete the message in the provider.
         """
 
+    @abc.abstractmethod
     async def message_not_processed(self, message):
         """Perform actions when a message was not processed."""
-        pass
+        ...
 
+    @abc.abstractmethod
     def stop(self):
         """Stop the provider.
 
         If needed, the provider should perform clean-up actions.
-        This method is called whenever we need to shutdown the provider.
+        This method is called whenever we need to shut down the provider.
         """
-        pass
+        ...
