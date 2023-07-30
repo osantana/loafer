@@ -3,6 +3,8 @@
 
 * Update project to use modern tools
 * Deprecate docker, CircleCI, setup.py, etc.
+* Merge changes from olist/olist-loafer
+* Merge changes from silviolleite/loafer
 
 2.0.1 (2020-07-28)
 ------------------

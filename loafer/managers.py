@@ -1,4 +1,5 @@
 import asyncio
+import contextlib
 import logging
 import os
 from functools import cached_property
@@ -14,7 +15,7 @@ logger = logging.getLogger(__name__)
 class LoaferManager:
     def __init__(self, routes, runner=None, _concurrency_limit=None, _max_threads=None) -> None:
         self._concurrency_limit = _concurrency_limit
-        if runner is None:
+        if not runner:
             self.runner = LoaferRunner(on_stop_callback=self.on_loop__stop, max_workers=_max_threads)
         else:
             self.runner = runner
@@ -63,9 +64,9 @@ class LoaferManager:
         return None
 
     def on_loop__stop(self, *args, **kwargs):  # noqa: ARG002
-        logger.info("cancel dispatcher operations ...")
+        logger.info("Cancel dispatcher operations...")
 
-        if hasattr(self, "_future"):
+        with contextlib.suppress(AttributeError):
             self._future.cancel()
 
         self.dispatcher.stop()

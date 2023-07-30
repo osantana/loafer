@@ -40,17 +40,14 @@ class Route:
         return f"<{type(self).__name__}(name={self.name} provider={self.provider!r} handler={self.handler!r})>"
 
     def apply_message_translator(self, message):
-        processed_message = {"content": message, "metadata": {}}
         if not self.message_translator:
-            return processed_message
+            return {"content": message, "metadata": {}}
 
-        translated = self.message_translator.translate(processed_message["content"])
-        processed_message["metadata"].update(translated.get("metadata", {}))
-        processed_message["content"] = translated["content"]
-        if not processed_message["content"]:
+        translated = self.message_translator.translate(message)
+        if not translated["content"]:
             raise ValueError(f"{self.message_translator} failed to translate message={message}")
 
-        return processed_message
+        return translated
 
     async def deliver(self, raw_message):
         message = self.apply_message_translator(raw_message)
@@ -69,7 +66,7 @@ class Route:
             extra={"handled_message": message},
         )
 
-        if self._error_handler is not None:
+        if self._error_handler:
             return await ensure_coroutinefunction(self._error_handler, exc_info, message)
 
         return False
