@@ -4,11 +4,8 @@ Development Installation
 Requirements
 ------------
 
-Python 3.6+
-
-Note::
-
-    Some packages also needs python3.5-dev package (ubuntu) or similar
+* Poetry
+* Python 3.10+
 
 
 Development install
@@ -17,21 +14,13 @@ Development install
 After forking or checking out::
 
     $ cd loafer/
-    $ pip install -r requirements/local.txt
-    $ pre-commit install
-    $ pip install -e .
+    $ poetry install
+    $ poetry run pre-commit install
 
 
 The requirements folder are only used for development, so we can easily
 install/track dependencies required to run the tests using continuous
 integration platforms.
-
-The official entrypoint for distritubution is the ``setup.py`` which also
-contains the minimum requirements to execute the tests.
-
-It's important to execute ``pip install -e .`` not only to install the main
-dependencies, but also to include ``loafer`` in our environment.
-
 
 Running tests::
 

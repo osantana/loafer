@@ -4,12 +4,7 @@ Installation
 Requirements
 ------------
 
-Python 3.6+
-
-Note::
-
-    Some packages also needs python3.5-dev package (ubuntu) or similar
-
+* Python 3.10+
 
 To install via pip::
 

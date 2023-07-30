@@ -1,5 +1,8 @@
-
 class ProviderError(Exception):
+    pass
+
+
+class ProviderRuntimeError(ProviderError):
     pass
 
 

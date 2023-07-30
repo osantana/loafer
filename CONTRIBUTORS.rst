@@ -9,3 +9,4 @@ Thanks to:
 * wiliamsouza <wiliamsouza83@gmail.com>
 * GuilhermeVBeira <guilherme.vieira.beira@gmail.com>
 * hartungstenio <hartung@live.com>
+* Osvaldo Santana Neto <loafer@osantana.me>

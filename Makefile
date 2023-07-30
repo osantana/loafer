@@ -16,30 +16,18 @@ clean-dist:
 clean: clean-pyc clean-dist
 
 test:
-	pytest -vv tests
+	poetry run pytest -vv tests
 
 test-cov:
-	pytest -vv --cov=loafer tests
-
-cov:
-	coverage report -m
-
-cov-report:
-	pytest -vv --cov=loafer --cov-report=html tests
+	poetry run pytest -vv --cov=loafer tests
 
 check-fixtures:
-	pytest --dead-fixtures
+	poetry run pytest --dead-fixtures
 
 dist: clean
-	python setup.py sdist
-	python setup.py bdist_wheel
+	poetry build
 
 release: dist
-	git tag `python setup.py -q version`
-	git push origin `python setup.py -q version`
-	twine upload dist/*
-
-changelog-preview:
-	@echo "\nmaster ("$$(date '+%Y-%m-%d')")"
-	@echo "-------------------\n"
-	@git log $$(python setup.py -q version)...master --oneline --reverse
+	git tag `poetry version -s`
+	git push origin `poetry version -s`
+	poetry publish

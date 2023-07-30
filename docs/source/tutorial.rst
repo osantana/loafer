@@ -26,8 +26,8 @@ The ``handlers.py``::
         return True
 
 
-    async def error_handler(exc_info, message):
-        print('exception {} received'.format(exc_info))
+    async def error_handler(exc_type, exc, message):
+        print('exception {} received'.format(exc_type))
         # do not delete the message that originated the error
         return  False
 

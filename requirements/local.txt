@@ -1,7 +1,0 @@
--r test.txt
-Sphinx
-sphinx-autobuild
-twine
-wheel
-sphinx-rtd-theme
-seqdiag
