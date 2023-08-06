@@ -1,6 +1,7 @@
 3.0.0 (2023-07-29)
 ------------------
 
+* Fork the project to use `loafer-ng` package name in PyPI
 * Update project to use modern tools
 * Deprecate docker, CircleCI, setup.py, etc.
 * Apply pyupgrade to upgrade some Python constructions

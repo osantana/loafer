@@ -1,8 +1,11 @@
 [tool.poetry]
-name = "loafer"
-version = "2.1.0"
+name = "loafer-ng"
+version = "3.0.0"
 description = "Asynchronous message dispatcher for concurrent tasks processing"
-authors = ["Osvaldo Santana Neto <loafer@osantana.me>"]
+authors = [
+    "George Y. Kussumoto <contato@georgeyk.com.br>",
+    "Osvaldo Santana Neto <loafer-ng@osantana.me>",
+]
 license = "MIT"
 readme = "README.md"
 
